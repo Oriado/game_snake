@@ -1,12 +1,13 @@
-import random
-import pygame
-import sys
-import os
+import random # випадкові числа
+import pygame # гра
+import sys # системні функції
+import os # системні функції
 
-pygame.init()
-screen = pygame.display.set_mode((500, 500))
-clock = pygame.time.Clock()
-fps = 60
+pygame.init() # ініціалізація
+screen = pygame.display.set_mode((500, 500)) # розмір
+
+clock = pygame.time.Clock() # час
+fps = 60 # кадри
 
 def main_menu():
     font = pygame.font.SysFont("Comic Sans MS", 30)
@@ -14,21 +15,21 @@ def main_menu():
     play_text = font.render("Press any key to Play", True, (255, 255, 255))
     
     while True:
-        screen.fill((0, 0, 0))
+        screen.fill((0, 0, 0))#
         screen.blit(title, (screen.get_width() // 2 - title.get_width() // 2, 150))
         screen.blit(play_text, (screen.get_width() // 2 - play_text.get_width() // 2, 300))
         
         pygame.display.update()
         
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        for event in pygame.event.get(): # події
+            if event.type == pygame.QUIT: 
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 return
         clock.tick(fps) 
 # меню закінчення гри
-def game_over_screen(score):
+def game_over_screen(score): 
     font_big = pygame.font.SysFont("Comic Sans MS", 50)
     font_small = pygame.font.SysFont("Comic Sans MS", 30)
     
@@ -44,7 +45,7 @@ def game_over_screen(score):
         
         pygame.display.update()
         
-        for event in pygame.event.get():
+        for event in pygame.event.get(): 
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
@@ -68,13 +69,13 @@ NEON_COLORS = [ (255, 20, 147), # neon pink
                 (255, 165, 0) # orange
 ] 
 
-def generate_apple(snake):
-    total_cells = screen.get_width() // circle_size * screen.get_height() // circle_size
-    if len(snake) >= total_cells:
+def generate_apple(snake): # генерація яблука
+    total_cells = screen.get_width() // circle_size * screen.get_height() // circle_size 
+    if len(snake) >= total_cells: 
         return None # немає місця то перемога
 
     while True:
-        apple_x = random.randint(1, screen.get_width() // circle_size -2) * circle_size
+        apple_x = random.randint(1, screen.get_width() // circle_size -2) * circle_size # випадкове місце
         apple_y = random.randint(1, screen.get_height() // circle_size -2) * circle_size
         
         # перевірка щоб яблуко не заходило на область score
@@ -94,27 +95,27 @@ score = 0
 font = pygame.font.SysFont("Comic Sans MS", 25)
 
 
-x = (screen.get_width() // 2 // circle_size) * circle_size
+x = (screen.get_width() // 2 // circle_size) * circle_size # початкова позиція
 y = (screen.get_height() // 2 // circle_size) * circle_size
 
-center = x + circle_size // 2, y + circle_size //2
+center = x + circle_size // 2, y + circle_size //2 # центр
 radius_big= circle_size // 2 
-radius_small = circle_size // 3
+radius_small = circle_size // 3 
 snake = [
     (x + circle_size * 2, y),  # голова справа
     (x + circle_size, y),       # тіло
     (x, y)                      # хвіст зліва
 ]
-apple_x, apple_y, apple_color = generate_apple(snake)
-apple_center = apple_x + circle_size // 2, apple_y + circle_size //2
+apple_x, apple_y, apple_color = generate_apple(snake) # генерація яблука
+apple_center = apple_x + circle_size // 2, apple_y + circle_size //2 # центр яблука
 
 dx = circle_size
 dy = 0
 
 
-while True:
+while True: # основний цикл
 
-    for event in pygame.event.get():
+    for event in pygame.event.get(): 
         if event.type == pygame.QUIT:
             exit()
         if event.type == pygame.KEYDOWN:
@@ -145,17 +146,17 @@ while True:
                 dx = circle_size
                 dy = 0  
               
-    frame_count += 1
+    frame_count += 1 # лічильник кадрів
     if frame_count % speed == 0:
         frame_count = 0
         
         new_head = (snake[0][0] + dx, snake[0][1] + dy)# нова позиція голови
 
 
-        if 0 <= new_head[0] < screen.get_width() and 0 <= new_head[1] < screen.get_height():
+        if 0 <= new_head[0] < screen.get_width() and 0 <= new_head[1] < screen.get_height(): # перевірка на вихід за межі екрану
             snake.insert(0, new_head)
         
-            if new_head[0] == apple_x and new_head[1] == apple_y:
+            if new_head[0] == apple_x and new_head[1] == apple_y: 
                 score += 10
                 # з’їла яблуко не видаляємо хвіст
                 result = generate_apple(snake)  
@@ -175,18 +176,19 @@ while True:
                 snake.pop()      
         # самопоїдання    
             if new_head in snake[1:]:
-                game_over_screen(score)
-                exit()           
+                indx = snake.index(new_head, 1)  # знаходимо індекс зіткнення
+                snake = snake[:indx + 1]  # залишаємо лише частину до зіткнення
+                           
         else:
             game_over_screen(score)
             exit()
 
     screen.fill((0, 0, 0)) 
     
-    for i, (body_x, body_y) in enumerate(snake):
+    for i, (body_x, body_y) in enumerate(snake): 
         center = body_x + circle_size // 2, body_y + circle_size //2
         if i == 0: # голова
-            pygame.draw.circle(
+            pygame.draw.circle( 
                 screen,
                 (0, 200, 0), #color
                 center,
@@ -251,7 +253,7 @@ while True:
                 center,
                 radius_small
             )
-    apple_center = apple_x + circle_size // 2, apple_y + circle_size //2
+    apple_center = apple_x + circle_size // 2, apple_y + circle_size //2 # центр яблука
     
     #яблуко
     pygame.draw.circle(
@@ -262,6 +264,7 @@ while True:
     )
     score_text = font.render(f"Score: {score}", True, (255, 255, 255))
     screen.blit(score_text, (10, 10))
+    
     pygame.display.update()
     clock.tick(fps)
 
