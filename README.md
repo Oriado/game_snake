@@ -27,13 +27,7 @@ cd <game_snake>
 Для запуску гри потрібно встановити бібліотеку Pygame:
 
 ```bash
-pip install pygame
-```
-
-або
-
-```bash
-pip install -r requirements.txt
+pip install pygame  
 ```
 
 ## Запуск гри
